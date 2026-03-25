@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Link+",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "极简、高效的网页书签管理工具，采用类似 Raycast 的交互逻辑",
   "author": "Link+ Team",
   
@@ -25,7 +25,15 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["lib/fuse.js", "content/inject.js"],
+      "js": [
+        "lib/fuse.js",
+        "content/inject.js",
+        "content/modules/styles.js",
+        "content/modules/ui.js",
+        "content/modules/search.js",
+        "content/modules/handlers.js",
+        "content/modules/toast.js"
+      ],
       "css": ["content/style.css"],
       "run_at": "document_start",
       "all_frames": false

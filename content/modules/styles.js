@@ -1,0 +1,262 @@
+/**
+ * Link+ styles.js
+ * Shadow DOM 内联样式 / Inline styles for Shadow DOM
+ */
+
+/* global LinkPlus */
+
+LinkPlus.getStyles = function() {
+  return `
+    :host { all: initial; }
+
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* ── 遮罩 & 面板 ── */
+    .linkplus-overlay {
+      position: fixed; top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding-top: 120px;
+      opacity: 0; visibility: hidden;
+      transition: opacity .2s ease, visibility .2s ease;
+      z-index: 2147483647;
+    }
+    .linkplus-overlay.active { opacity: 1; visibility: visible; }
+
+    .linkplus-panel {
+      width: 640px; max-width: 90vw;
+      background: rgba(30,30,35,.95);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+      overflow: hidden;
+      transform: scale(.95) translateY(-10px);
+      transition: transform .2s cubic-bezier(.16,1,.3,1);
+    }
+    .linkplus-overlay.active .linkplus-panel { transform: scale(1) translateY(0); }
+
+    /* ── 搜索框 ── */
+    .linkplus-search-box {
+      display: flex; align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .linkplus-search-icon {
+      width: 20px; height: 20px; margin-right: 12px;
+      color: rgba(255,255,255,.5); flex-shrink: 0;
+    }
+    .linkplus-search-icon.command-mode { color: #10b981; }
+    .linkplus-input {
+      flex: 1; background: transparent; border: none; outline: none;
+      color: #fff; font-size: 16px; line-height: 1.5;
+    }
+    .linkplus-input::placeholder { color: rgba(255,255,255,.35); }
+    .linkplus-shortcut-hint {
+      font-size: 12px; color: rgba(255,255,255,.35);
+      margin-left: 12px; white-space: nowrap;
+    }
+
+    /* ── 指令提示 ── */
+    .linkplus-command-hint {
+      padding: 8px 20px;
+      background: rgba(16,185,129,.1);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: 13px; color: #10b981; display: none;
+    }
+    .linkplus-command-hint.active { display: block; }
+
+    /* ── 分类标签栏 ── */
+    .linkplus-category-bar {
+      display: none; flex-wrap: nowrap; overflow-x: auto;
+      gap: 6px; padding: 8px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      scrollbar-width: none;
+    }
+    .linkplus-category-bar::-webkit-scrollbar { display: none; }
+    .linkplus-category-tab {
+      flex-shrink: 0;
+      background: rgba(255,255,255,.06);
+      border: 1px solid transparent; border-radius: 20px;
+      padding: 4px 12px; font-size: 13px;
+      color: rgba(255,255,255,.6); cursor: pointer;
+      transition: all .15s ease; white-space: nowrap;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .linkplus-category-tab:hover { background: rgba(255,255,255,.12); color: rgba(255,255,255,.9); }
+    .linkplus-category-tab.active {
+      background: rgba(99,102,241,.25);
+      border-color: rgba(99,102,241,.5); color: #a5b4fc;
+    }
+    .linkplus-category-count {
+      font-size: 11px; background: rgba(255,255,255,.12);
+      border-radius: 10px; padding: 1px 6px; color: rgba(255,255,255,.5);
+    }
+    .linkplus-category-tab.active .linkplus-category-count {
+      background: rgba(99,102,241,.3); color: #a5b4fc;
+    }
+
+    /* ── 结果列表 ── */
+    .linkplus-results { max-height: 400px; overflow-y: auto; padding: 8px; }
+    .linkplus-results::-webkit-scrollbar { width: 6px; }
+    .linkplus-results::-webkit-scrollbar-track { background: transparent; }
+    .linkplus-results::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 3px; }
+
+    .linkplus-result-item {
+      display: flex; align-items: center;
+      padding: 12px 16px; border-radius: 8px;
+      cursor: pointer; transition: background .15s ease;
+    }
+    .linkplus-result-item:hover,
+    .linkplus-result-item.selected { background: rgba(255,255,255,.08); }
+
+    .linkplus-result-icon {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      margin-right: 12px; flex-shrink: 0; font-size: 14px;
+    }
+    .linkplus-result-content { flex: 1; min-width: 0; }
+    .linkplus-result-title {
+      color: #fff; font-size: 14px; font-weight: 500; line-height: 1.4;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .linkplus-result-url {
+      color: rgba(255,255,255,.45); font-size: 12px; line-height: 1.4;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px;
+    }
+    .linkplus-result-folder {
+      font-size: 11px; color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.08);
+      padding: 2px 8px; border-radius: 4px; margin-left: 8px; flex-shrink: 0;
+    }
+
+    /* ── 编辑 & 删除按钮 ── */
+    .linkplus-edit-btn, .linkplus-delete-btn {
+      background: transparent; border: none; padding: 6px;
+      cursor: pointer; opacity: 0;
+      transition: opacity .15s ease, transform .15s ease;
+      border-radius: 4px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .linkplus-edit-btn { margin-left: 8px; }
+    .linkplus-delete-btn { margin-left: 4px; }
+    .linkplus-edit-btn .linkplus-icon { width: 14px; height: 14px; color: rgba(59,130,246,.8); }
+    .linkplus-delete-btn .linkplus-icon { width: 14px; height: 14px; color: rgba(239,68,68,.8); }
+    .linkplus-result-item:hover .linkplus-edit-btn,
+    .linkplus-result-item:hover .linkplus-delete-btn { opacity: 1; }
+    .linkplus-edit-btn:hover { background: rgba(59,130,246,.2); transform: scale(1.1); }
+    .linkplus-edit-btn:hover .linkplus-icon { color: rgba(59,130,246,1); }
+    .linkplus-delete-btn:hover { background: rgba(239,68,68,.2); transform: scale(1.1); }
+    .linkplus-delete-btn:hover .linkplus-icon { color: rgba(239,68,68,1); }
+    .linkplus-edit-btn:active, .linkplus-delete-btn:active { transform: scale(.95); }
+
+    /* ── 空状态 ── */
+    .linkplus-empty { padding: 40px 20px; text-align: center; color: rgba(255,255,255,.4); font-size: 14px; }
+    .linkplus-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: .5; }
+
+    /* ── 底部栏 ── */
+    .linkplus-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      font-size: 12px; color: rgba(255,255,255,.35);
+    }
+    .linkplus-footer-hint { display: flex; align-items: center; gap: 6px; }
+    .linkplus-footer-actions { display: flex; align-items: center; gap: 8px; }
+    .linkplus-key {
+      background: rgba(255,255,255,.1); padding: 2px 6px;
+      border-radius: 4px; font-size: 11px; font-family: 'SF Mono', Monaco, monospace;
+    }
+    .linkplus-footer-btn {
+      display: flex; align-items: center; gap: 4px; padding: 4px 8px;
+      border-radius: 4px; cursor: pointer; font-size: 12px;
+      transition: all .15s ease; border: 1px solid transparent;
+      background: transparent; color: rgba(255,255,255,.5);
+    }
+    .linkplus-footer-btn .linkplus-icon { width: 12px; height: 12px; }
+    .linkplus-footer-btn:active { transform: scale(.95); }
+    .linkplus-footer-tutorial:hover { background: rgba(59,130,246,.15); border-color: rgba(59,130,246,.3); color: rgba(59,130,246,.9); }
+    .linkplus-footer-settings:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.2); color: rgba(255,255,255,.9); }
+    .linkplus-footer-clear:hover { background: rgba(239,68,68,.15); border-color: rgba(239,68,68,.3); color: rgba(239,68,68,.9); }
+
+    /* ── 教程弹窗 ── */
+    .linkplus-tutorial-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,.7); backdrop-filter: blur(4px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2147483647;
+    }
+    .linkplus-tutorial-content {
+      width: 600px; max-width: 90vw; max-height: 80vh;
+      background: rgba(30,30,35,.98);
+      border: 1px solid rgba(255,255,255,.1); border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,.5);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .linkplus-tutorial-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .linkplus-tutorial-header h2 { color: #fff; font-size: 18px; font-weight: 600; margin: 0; }
+    .linkplus-tutorial-close {
+      background: transparent; border: none; color: rgba(255,255,255,.5);
+      font-size: 20px; cursor: pointer; padding: 4px 8px;
+      border-radius: 4px; transition: all .15s ease;
+    }
+    .linkplus-tutorial-close:hover { color: rgba(255,255,255,.9); background: rgba(255,255,255,.1); }
+    .linkplus-tutorial-body {
+      padding: 20px; overflow-y: auto;
+      color: rgba(255,255,255,.85); font-size: 14px; line-height: 1.6;
+    }
+    .linkplus-tutorial-body section { margin-bottom: 20px; }
+    .linkplus-tutorial-body h3 {
+      color: #fff; font-size: 16px; font-weight: 600;
+      margin: 0 0 12px; padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .linkplus-tutorial-body h4 { color: rgba(255,255,255,.9); font-size: 14px; font-weight: 500; margin: 12px 0 8px; }
+    .linkplus-tutorial-body ul, .linkplus-tutorial-body ol { margin: 8px 0; padding-left: 20px; }
+    .linkplus-tutorial-body li { margin: 6px 0; }
+    .linkplus-tutorial-body kbd {
+      background: rgba(255,255,255,.1); padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: rgba(255,255,255,.9);
+    }
+    .linkplus-tutorial-body code {
+      background: rgba(255,255,255,.08); padding: 2px 6px; border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #10b981;
+    }
+    .linkplus-tutorial-method { background: rgba(255,255,255,.03); padding: 12px; border-radius: 8px; margin: 8px 0; }
+    .linkplus-tutorial-examples, .linkplus-tutorial-tips {
+      margin-top: 12px; padding: 10px;
+      background: rgba(255,255,255,.05); border-radius: 6px;
+    }
+    .linkplus-tutorial-examples p, .linkplus-tutorial-tips p { margin: 0 0 8px; color: rgba(255,255,255,.7); }
+
+    /* ── Toast 通知 ── */
+    .linkplus-toast-container {
+      position: fixed; top: 20px; right: 20px; z-index: 2147483647;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .linkplus-toast {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px;
+      background: rgba(30,30,35,.98);
+      border: 1px solid rgba(255,255,255,.1); border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0,0,0,.4);
+      color: #fff; font-size: 14px;
+      transform: translateX(120%); opacity: 0;
+      transition: transform .3s cubic-bezier(.16,1,.3,1), opacity .3s ease;
+      max-width: 320px;
+    }
+    .linkplus-toast.show { transform: translateX(0); opacity: 1; }
+    .linkplus-toast-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .linkplus-toast.success .linkplus-toast-icon { color: #10b981; }
+    .linkplus-toast.error .linkplus-toast-icon { color: #ef4444; }
+    .linkplus-toast-message { flex: 1; }
+  `;
+};

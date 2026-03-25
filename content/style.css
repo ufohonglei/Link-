@@ -132,6 +132,57 @@
 }
 
 /* ============================================
+   Category Tab Bar
+   ============================================ */
+
+.linkplus-category-bar {
+  display: none;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  scrollbar-width: none;
+}
+.linkplus-category-bar::-webkit-scrollbar { display: none; }
+
+.linkplus-category-tab {
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.linkplus-category-tab:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+.linkplus-category-tab.active {
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.5);
+  color: #a5b4fc;
+}
+.linkplus-category-count {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 1px 6px;
+  color: rgba(255, 255, 255, 0.5);
+}
+.linkplus-category-tab.active .linkplus-category-count {
+  background: rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+}
+
+/* ============================================
    Search Results List
    ============================================ */
 
@@ -221,6 +272,37 @@
 }
 
 /* ============================================
+   Edit & Delete Buttons
+   ============================================ */
+
+.linkplus-edit-btn,
+.linkplus-delete-btn {
+  background: transparent;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.linkplus-edit-btn { margin-left: 8px; }
+.linkplus-delete-btn { margin-left: 4px; }
+.linkplus-edit-btn .linkplus-icon { width: 14px; height: 14px; color: rgba(59, 130, 246, 0.8); }
+.linkplus-delete-btn .linkplus-icon { width: 14px; height: 14px; color: rgba(239, 68, 68, 0.8); }
+.linkplus-result-item:hover .linkplus-edit-btn,
+.linkplus-result-item:hover .linkplus-delete-btn { opacity: 1; }
+.linkplus-edit-btn:hover { background: rgba(59, 130, 246, 0.2); transform: scale(1.1); }
+.linkplus-edit-btn:hover .linkplus-icon { color: rgba(59, 130, 246, 1); }
+.linkplus-delete-btn:hover { background: rgba(239, 68, 68, 0.2); transform: scale(1.1); }
+.linkplus-delete-btn:hover .linkplus-icon { color: rgba(239, 68, 68, 1); }
+.linkplus-edit-btn:active,
+.linkplus-delete-btn:active { transform: scale(0.95); }
+
+/* ============================================
    Empty State
    ============================================ */
 
@@ -257,6 +339,31 @@
   gap: 6px;
 }
 
+.linkplus-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.linkplus-footer-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+}
+.linkplus-footer-btn .linkplus-icon { width: 12px; height: 12px; }
+.linkplus-footer-btn:active { transform: scale(0.95); }
+.linkplus-footer-tutorial:hover { background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.3); color: rgba(59, 130, 246, 0.9); }
+.linkplus-footer-settings:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: rgba(255, 255, 255, 0.9); }
+.linkplus-footer-clear:hover { background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: rgba(239, 68, 68, 0.9); }
+
 .linkplus-key {
   background: rgba(255, 255, 255, 0.1);
   padding: 2px 6px;
@@ -264,6 +371,65 @@
   font-size: 11px;
   font-family: 'SF Mono', Monaco, monospace;
 }
+
+/* ============================================
+   Tutorial Modal
+   ============================================ */
+
+.linkplus-tutorial-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2147483647;
+}
+.linkplus-tutorial-content {
+  width: 600px; max-width: 90vw; max-height: 80vh;
+  background: rgba(30, 30, 35, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.linkplus-tutorial-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.linkplus-tutorial-header h2 { color: #fff; font-size: 18px; font-weight: 600; margin: 0; }
+.linkplus-tutorial-close {
+  background: transparent; border: none; color: rgba(255, 255, 255, 0.5);
+  font-size: 20px; cursor: pointer; padding: 4px 8px;
+  border-radius: 4px; transition: all 0.15s ease;
+}
+.linkplus-tutorial-close:hover { color: rgba(255, 255, 255, 0.9); background: rgba(255, 255, 255, 0.1); }
+.linkplus-tutorial-body {
+  padding: 20px; overflow-y: auto;
+  color: rgba(255, 255, 255, 0.85); font-size: 14px; line-height: 1.6;
+}
+.linkplus-tutorial-body section { margin-bottom: 20px; }
+.linkplus-tutorial-body h3 {
+  color: #fff; font-size: 16px; font-weight: 600;
+  margin: 0 0 12px; padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.linkplus-tutorial-body h4 { color: rgba(255, 255, 255, 0.9); font-size: 14px; font-weight: 500; margin: 12px 0 8px; }
+.linkplus-tutorial-body ul,
+.linkplus-tutorial-body ol { margin: 8px 0; padding-left: 20px; }
+.linkplus-tutorial-body li { margin: 6px 0; }
+.linkplus-tutorial-body kbd {
+  background: rgba(255, 255, 255, 0.1); padding: 2px 6px; border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace; font-size: 12px; color: rgba(255, 255, 255, 0.9);
+}
+.linkplus-tutorial-body code {
+  background: rgba(255, 255, 255, 0.08); padding: 2px 6px; border-radius: 4px;
+  font-family: 'SF Mono', Monaco, monospace; font-size: 13px; color: #10b981;
+}
+.linkplus-tutorial-method { background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 8px; margin: 8px 0; }
+.linkplus-tutorial-examples,
+.linkplus-tutorial-tips {
+  margin-top: 12px; padding: 10px;
+  background: rgba(255, 255, 255, 0.05); border-radius: 6px;
+}
+.linkplus-tutorial-examples p,
+.linkplus-tutorial-tips p { margin: 0 0 8px; color: rgba(255, 255, 255, 0.7); }
 
 /* ============================================
    Toast Notification
