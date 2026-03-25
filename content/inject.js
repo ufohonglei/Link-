@@ -24,7 +24,8 @@
     fuse: null,
     isCommandMode: false, // 是否为指令添加模式 / Is command mode (starts with +)
     commandTag: null, // 指令中的标签 / Tag in command
-    commandTitle: null // 指令中的自定义标题 / Custom title in command
+    commandTitle: null, // 指令中的自定义标题 / Custom title in command
+    activeCategory: 'all' // 当前选中的分类 / Current selected category
   };
 
   // ============================================
@@ -244,6 +245,61 @@
 
       .linkplus-command-hint.active {
         display: block;
+      }
+
+      /* 分类标签栏 / Category Tabs */
+      .linkplus-category-bar {
+        display: none;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 6px;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        scrollbar-width: none;
+      }
+
+      .linkplus-category-bar::-webkit-scrollbar {
+        display: none;
+      }
+
+      .linkplus-category-tab {
+        flex-shrink: 0;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid transparent;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+        transition: all 0.15s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .linkplus-category-tab:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .linkplus-category-tab.active {
+        background: rgba(99, 102, 241, 0.25);
+        border-color: rgba(99, 102, 241, 0.5);
+        color: #a5b4fc;
+      }
+
+      .linkplus-category-count {
+        font-size: 11px;
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 10px;
+        padding: 1px 6px;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .linkplus-category-tab.active .linkplus-category-count {
+        background: rgba(99, 102, 241, 0.3);
+        color: #a5b4fc;
       }
 
       /* 搜索结果列表 / Search Results List */
@@ -680,7 +736,12 @@
     commandHint.id = 'linkplus-command-hint';
     commandHint.textContent = '按 Enter 保存当前页面，使用 #标签 自动归类';
     
-    // 结果列表 / Results list
+    // 分类标签栏 / Category tabs
+    const categoryBar = document.createElement('div');
+    categoryBar.className = 'linkplus-category-bar';
+    categoryBar.id = 'linkplus-category-bar';
+    
+    // 结果列表 / Results List
     const results = document.createElement('div');
     results.className = 'linkplus-results';
     results.id = 'linkplus-results';
@@ -721,6 +782,7 @@
 
     panel.appendChild(searchBox);
     panel.appendChild(commandHint);
+    panel.appendChild(categoryBar);
     panel.appendChild(results);
     panel.appendChild(footer);
     overlay.appendChild(panel);
@@ -850,19 +912,68 @@
    * @param {string} query - 搜索关键词 / Search query
    */
   function performSearch(query) {
+    let results;
     if (!query) {
       // 显示所有书签 / Show all bookmarks
-      state.filteredBookmarks = state.bookmarks.slice(0, 50);
+      results = state.bookmarks;
     } else if (state.fuse) {
       // 使用 Fuse.js 搜索 / Use Fuse.js to search
-      const results = state.fuse.search(query);
-      state.filteredBookmarks = results.map(r => r.item);
+      results = state.fuse.search(query).map(r => r.item);
     } else {
-      state.filteredBookmarks = [];
+      results = [];
     }
     
+    // 按分类筛选 / Filter by category
+    if (state.activeCategory !== 'all') {
+      results = results.filter(b => (b.folder || '未分类') === state.activeCategory);
+    }
+    
+    state.filteredBookmarks = results.slice(0, 50);
     state.selectedIndex = 0;
+    updateCategoryBar();
     renderResults(state.filteredBookmarks);
+  }
+
+  /**
+   * 更新分类标签栏
+   * Update category tabs bar
+   */
+  function updateCategoryBar() {
+    const bar = shadowRoot.getElementById('linkplus-category-bar');
+    if (!bar) return;
+    
+    // 收集所有分类 / Collect all categories
+    const categoryMap = {};
+    state.bookmarks.forEach(b => {
+      const cat = b.folder && b.folder !== 'QuickLink_Data' ? b.folder : '未分类';
+      categoryMap[cat] = (categoryMap[cat] || 0) + 1;
+    });
+    
+    const categories = Object.keys(categoryMap).sort();
+    const totalCount = state.bookmarks.length;
+    
+    // 如果只有一个分类，隐藏标签栏 / Hide bar if only one category
+    if (categories.length <= 1) {
+      bar.style.display = 'none';
+      return;
+    }
+    bar.style.display = 'flex';
+    
+    bar.innerHTML = [
+      `<button class="linkplus-category-tab${state.activeCategory === 'all' ? ' active' : ''}" data-category="all">全部 <span class="linkplus-category-count">${totalCount}</span></button>`,
+      ...categories.map(cat => {
+        const isActive = state.activeCategory === cat;
+        return `<button class="linkplus-category-tab${isActive ? ' active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(cat)} <span class="linkplus-category-count">${categoryMap[cat]}</span></button>`;
+      })
+    ].join('');
+    
+    // 绑定点击事件 / Bind click events
+    bar.querySelectorAll('.linkplus-category-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        state.activeCategory = tab.dataset.category;
+        performSearch(state.searchQuery);
+      });
+    });
   }
 
   /**
@@ -1451,6 +1562,7 @@
     state.isCommandMode = false;
     state.commandTag = null;
     state.commandTitle = null;
+    state.activeCategory = 'all'; // 重置分类 / Reset category
     
     overlay.classList.add('active');
     input.value = '';
