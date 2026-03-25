@@ -119,6 +119,24 @@ Link+/
 
 本项目基于 [MIT License](LICENSE) 开源。
 
+## 👤 作者联系
+
+如有问题或建议，欢迎联系作者：
+
+- 📧 邮箱：your-email@example.com
+- 💬 微信：your-wechat-id
+- 🐙 GitHub：[your-github-username](https://github.com/your-github-username)
+
+## ☕ 支持项目
+
+如果这个项目对你有帮助，可以请作者喝杯咖啡：
+
+| 微信赞赏 | 支付宝 |
+|---------|--------|
+| ![微信赞赏码](images/wechat-reward.png) | ![支付宝收款码](images/alipay-reward.png) |
+
+> 您的支持是我持续开发的动力！❤️
+
 ## 🙏 致谢
 
 - [Fuse.js](https://fusejs.io/) - 强大的模糊搜索库
