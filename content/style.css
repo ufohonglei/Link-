@@ -12,7 +12,6 @@
 :host {
   all: initial;
   display: block;
-  contain: strict;
 }
 
 #linkplus-container,

@@ -23,14 +23,22 @@ LinkPlus.initFuse = function() {
 
 /**
  * 加载书签数据
+ * 已登录时从服务器拉取，未登录时读本地
  */
 LinkPlus.loadBookmarks = async function() {
   try {
-    const res = await chrome.runtime.sendMessage({ action: 'get-bookmarks' });
-    if (res.success) {
-      LinkPlus.state.bookmarks = res.data;
+    console.log('[Link+] loadBookmarks started, isLoggedIn:', LinkPlus.state.isLoggedIn);
+    
+    // 始终从本地 Chrome 书签加载（双向同步后本地已包含服务器数据）
+    const localRes = await chrome.runtime.sendMessage({ action: 'get-bookmarks' });
+    if (localRes.success) {
+      LinkPlus.state.bookmarks = localRes.data;
       LinkPlus.initFuse();
+      console.log('[Link+] Bookmarks loaded from local:', LinkPlus.state.bookmarks.length);
     }
+    
+    // 刷新显示
+    LinkPlus.performSearch(LinkPlus.state.searchQuery || '');
   } catch (e) {
     console.error('[Link+] Failed to load bookmarks:', e);
   }
@@ -71,15 +79,17 @@ LinkPlus.parseCommand = function(query) {
  */
 LinkPlus.performSearch = function(query) {
   const { state } = LinkPlus;
+  console.log('[Link+] performSearch, query:', query, 'bookmarks count:', state.bookmarks?.length || 0);
   let results;
 
   if (!query) {
-    results = state.bookmarks;
+    results = state.bookmarks || [];
   } else if (state.fuse) {
     results = state.fuse.search(query).map(r => r.item);
   } else {
     results = [];
   }
+  console.log('[Link+] performSearch results:', results.length);
 
   // 分类筛选
   if (state.activeCategory !== 'all') {
@@ -98,7 +108,12 @@ LinkPlus.performSearch = function(query) {
 LinkPlus.updateCategoryBar = function() {
   const { state, shadowRoot, escapeHtml } = LinkPlus;
   const bar = shadowRoot.getElementById('linkplus-category-bar');
-  if (!bar) return;
+  if (!bar) {
+    console.log('[Link+] Category bar not found');
+    return;
+  }
+  
+  console.log('[Link+] Updating category bar, bookmarks:', state.bookmarks.length);
 
   const map = {};
   state.bookmarks.forEach(b => {
@@ -106,9 +121,15 @@ LinkPlus.updateCategoryBar = function() {
     map[cat] = (map[cat] || 0) + 1;
   });
   const categories = Object.keys(map).sort();
+  console.log('[Link+] Categories found:', categories, map);
 
-  if (categories.length <= 1) { bar.style.display = 'none'; return; }
+  if (categories.length === 0) { 
+    bar.style.display = 'none'; 
+    bar.classList.remove('has-categories');
+    return; 
+  }
   bar.style.display = 'flex';
+  bar.classList.add('has-categories');
 
   bar.innerHTML = [
     `<button class="linkplus-category-tab${state.activeCategory === 'all' ? ' active' : ''}" data-category="all">全部 <span class="linkplus-category-count">${state.bookmarks.length}</span></button>`,

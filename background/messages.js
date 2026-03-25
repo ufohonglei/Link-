@@ -89,6 +89,36 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         break;
       }
 
+      case 'api-request': {
+        // API 请求代理（绕过 CORS）
+        try {
+          const headers = {
+            'Content-Type': 'application/json',
+          };
+          if (request.token) {
+            headers['Authorization'] = `Bearer ${request.token}`;
+          }
+
+          const response = await fetch(request.url, {
+            method: request.method,
+            headers,
+            body: request.body,
+          });
+
+          const data = await response.json().catch(() => ({}));
+
+          if (!response.ok) {
+            sendResponse({ success: false, error: data.error || `HTTP ${response.status}`, status: response.status });
+          } else {
+            sendResponse({ success: true, data, status: response.status });
+          }
+        } catch (e) {
+          console.error('[Link+] API proxy error:', e);
+          sendResponse({ success: false, error: '无法连接到服务器', status: 0 });
+        }
+        break;
+      }
+
       default:
         sendResponse({ success: false, error: 'Unknown action' });
     }

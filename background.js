@@ -37,7 +37,7 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
     } catch {
       // content script 未注入时动态注入
       try {
-        await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['lib/fuse.js', 'content/inject.js', 'content/modules/styles.js', 'content/modules/ui.js', 'content/modules/search.js', 'content/modules/handlers.js', 'content/modules/toast.js'] });
+        await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['lib/fuse.js', 'content/inject.js', 'content/modules/api.js', 'content/modules/sync.js', 'content/modules/auth.js', 'content/modules/styles.js', 'content/modules/ui.js', 'content/modules/search.js', 'content/modules/handlers.js', 'content/modules/toast.js'] });
         await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['content/style.css'] });
         setTimeout(async () => {
           await chrome.tabs.sendMessage(tab.id, { action: 'toggle-search' });

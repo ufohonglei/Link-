@@ -34,6 +34,9 @@
     commandTag:        null,
     commandTitle:      null,
     activeCategory:    'all',
+    // 云同步相关
+    isLoggedIn:        false,
+    user:              null,
   };
 
   LP.shadowRoot = null;
@@ -53,15 +56,19 @@
     if (document.getElementById('linkplus-host')) {
       LP.shadowHost = document.getElementById('linkplus-host');
       LP.shadowRoot = LP.shadowHost.shadowRoot;
+      // 确保 host 尺寸正确
+      LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none;';
       return;
     }
     LP.shadowHost = document.createElement('div');
     LP.shadowHost.id = 'linkplus-host';
-    LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;z-index:2147483647;';
+    LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none;';
     LP.shadowRoot = LP.shadowHost.attachShadow({ mode: 'open' });
 
     const style = document.createElement('style');
-    style.textContent = typeof LP.getStyles === 'function' ? LP.getStyles() : '';
+    const stylesContent = typeof LP.getStyles === 'function' ? LP.getStyles() : '';
+    console.log('[Link+] Styles content length:', stylesContent.length);
+    style.textContent = stylesContent;
     LP.shadowRoot.appendChild(style);
 
     const container = document.createElement('div');
@@ -74,17 +81,41 @@
 
   // ── 面板控制 ──
   LP.openSearchPanel = async function() {
+    console.log('[Link+] openSearchPanel called, isSearchOpen:', LP.state.isSearchOpen);
     if (LP.state.isSearchOpen) return;
-    LP.initShadowDOM();
 
-    if (!LP.shadowRoot.getElementById('linkplus-overlay')) {
+    // 安全检查：确保 UI 模块已加载
+    if (typeof LP.createSearchPanel !== 'function') {
+      console.error('[Link+] UI module not loaded yet');
+      return;
+    }
+
+    LP.initShadowDOM();
+    console.log('[Link+] Shadow DOM initialized, shadowRoot:', !!LP.shadowRoot);
+
+    const existingOverlay = LP.shadowRoot.getElementById('linkplus-overlay');
+    console.log('[Link+] existing overlay:', !!existingOverlay);
+
+    if (!existingOverlay) {
+      console.log('[Link+] Creating search panel...');
       LP.createSearchPanel();
       LP.createToastContainer();
-      await LP.loadBookmarks();
+      try {
+        await LP.loadBookmarks();
+      } catch (e) {
+        console.error('[Link+] loadBookmarks failed:', e);
+      }
     }
 
     const overlay = LP.shadowRoot.getElementById('linkplus-overlay');
     const input   = LP.shadowRoot.getElementById('linkplus-input');
+
+    console.log('[Link+] overlay after create:', !!overlay, 'input:', !!input);
+
+    if (!overlay) {
+      console.error('[Link+] overlay not found after creation!');
+      return;
+    }
 
     Object.assign(LP.state, {
       isSearchOpen: true, searchQuery: '', selectedIndex: 0,
@@ -92,11 +123,21 @@
     });
 
     overlay.classList.add('active');
-    input.value = '';
-    setTimeout(() => { input.focus(); input.select(); }, 50);
+    console.log('[Link+] overlay active class added');
 
-    await LP.loadBookmarks();
-    LP.performSearch('');
+    if (input) {
+      input.value = '';
+      setTimeout(() => { input.focus(); input.select(); }, 50);
+    }
+
+    try {
+      await LP.loadBookmarks();
+      if (typeof LP.performSearch === 'function') {
+        LP.performSearch('');
+      }
+    } catch (e) {
+      console.error('[Link+] loadBookmarks failed:', e);
+    }
   };
 
   LP.closeSearchPanel = function() {
@@ -130,10 +171,18 @@
 
   // ── 所有同批 content script 同步执行完后，再初始化 Shadow DOM ──
   // setTimeout(0) 确保 modules/*.js 执行完毕，再初始化
+  function init() {
+    LP.initShadowDOM();
+    // 同步初始化不阻塞，syncInit 在后台执行
+    if (typeof LP.syncInit === 'function') {
+      LP.syncInit().catch(e => console.log('[Link+] syncInit failed:', e));
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(LP.initShadowDOM, 0));
+    document.addEventListener('DOMContentLoaded', () => setTimeout(init, 0));
   } else {
-    setTimeout(LP.initShadowDOM, 0);
+    setTimeout(init, 0);
   }
 
   console.log('[Link+] Content script loaded');
