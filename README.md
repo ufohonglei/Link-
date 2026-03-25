@@ -1,3 +1,6 @@
+<img width="2048" height="2048" alt="Gemini_Generated_Image_wtfk51wtfk51wtfk" src="https://github.com/user-attachments/assets/3b93f4c6-4da4-4eab-83f0-4cbeb5ef7731" />
+
+
 # Link+ - 极简高效的浏览器书签管理工具
 
 Link+ 是一个基于 Chrome Extension Manifest V3 开发的浏览器插件，采用类似 Raycast 的交互逻辑，提供极简、高效的网页书签管理体验。
