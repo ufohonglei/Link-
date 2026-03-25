@@ -551,6 +551,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
         break;
         
+      case 'update-bookmark':
+        // 更新书签 / Update bookmark
+        try {
+          await chrome.bookmarks.update(request.bookmarkId, {
+            title: request.title
+          });
+          clearBookmarksCache();
+          sendResponse({ success: true });
+        } catch (error) {
+          sendResponse({ success: false, error: error.message });
+        }
+        break;
+        
       case 'clear-all-bookmarks':
         // 清空所有书签 / Clear all bookmarks
         try {

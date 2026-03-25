@@ -23,7 +23,8 @@
     selectedIndex: 0,
     fuse: null,
     isCommandMode: false, // 是否为指令添加模式 / Is command mode (starts with +)
-    commandTag: null // 指令中的标签 / Tag in command
+    commandTag: null, // 指令中的标签 / Tag in command
+    commandTitle: null // 指令中的自定义标题 / Custom title in command
   };
 
   // ============================================
@@ -328,12 +329,51 @@
         flex-shrink: 0;
       }
 
+      /* 编辑按钮 / Edit Button */
+      .linkplus-edit-btn {
+        background: transparent;
+        border: none;
+        padding: 6px;
+        margin-left: 8px;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.15s ease, transform 0.15s ease;
+        border-radius: 4px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .linkplus-edit-btn .linkplus-icon {
+        width: 14px;
+        height: 14px;
+        color: rgba(59, 130, 246, 0.8);
+      }
+
+      .linkplus-result-item:hover .linkplus-edit-btn {
+        opacity: 1;
+      }
+
+      .linkplus-edit-btn:hover {
+        background: rgba(59, 130, 246, 0.2);
+        transform: scale(1.1);
+      }
+
+      .linkplus-edit-btn:hover .linkplus-icon {
+        color: rgba(59, 130, 246, 1);
+      }
+
+      .linkplus-edit-btn:active {
+        transform: scale(0.95);
+      }
+
       /* 删除按钮 / Delete Button */
       .linkplus-delete-btn {
         background: transparent;
         border: none;
         padding: 6px;
-        margin-left: 8px;
+        margin-left: 4px;
         cursor: pointer;
         opacity: 0;
         transition: opacity 0.15s ease, transform 0.15s ease;
@@ -404,6 +444,142 @@
         border-radius: 4px;
         font-size: 11px;
         font-family: 'SF Mono', Monaco, monospace;
+      }
+
+      /* 教程弹窗 / Tutorial Modal */
+      .linkplus-tutorial-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2147483647;
+      }
+
+      .linkplus-tutorial-content {
+        width: 600px;
+        max-width: 90vw;
+        max-height: 80vh;
+        background: rgba(30, 30, 35, 0.98);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .linkplus-tutorial-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .linkplus-tutorial-header h2 {
+        color: #fff;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .linkplus-tutorial-close {
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 20px;
+        cursor: pointer;
+        padding: 4px 8px;
+        border-radius: 4px;
+        transition: all 0.15s ease;
+      }
+
+      .linkplus-tutorial-close:hover {
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .linkplus-tutorial-body {
+        padding: 20px;
+        overflow-y: auto;
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .linkplus-tutorial-body section {
+        margin-bottom: 20px;
+      }
+
+      .linkplus-tutorial-body h3 {
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
+        margin: 0 0 12px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .linkplus-tutorial-body h4 {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        font-weight: 500;
+        margin: 12px 0 8px 0;
+      }
+
+      .linkplus-tutorial-body ul,
+      .linkplus-tutorial-body ol {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+
+      .linkplus-tutorial-body li {
+        margin: 6px 0;
+      }
+
+      .linkplus-tutorial-body kbd {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .linkplus-tutorial-body code {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'SF Mono', Monaco, monospace;
+        font-size: 13px;
+        color: #10b981;
+      }
+
+      .linkplus-tutorial-method {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 12px;
+        border-radius: 8px;
+        margin: 8px 0;
+      }
+
+      .linkplus-tutorial-examples,
+      .linkplus-tutorial-tips {
+        margin-top: 12px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+      }
+
+      .linkplus-tutorial-examples p,
+      .linkplus-tutorial-tips p {
+        margin: 0 0 8px 0;
+        color: rgba(255, 255, 255, 0.7);
       }
 
       /* Toast 通知 / Toast Notification */
@@ -659,9 +835,13 @@
     // 移除开头的 + / Remove leading +
     const content = query.substring(1).trim();
     
-    // 解析标签 / Parse tag
-    const tagMatch = content.match(/#([^\s]+)$/);
+    // 解析标签 / Parse tag (支持 #标签 在任意位置)
+    const tagMatch = content.match(/#([^\s#]+)/);
     state.commandTag = tagMatch ? tagMatch[1] : null;
+    
+    // 解析自定义标题 / Parse custom title
+    // 移除标签部分得到标题 / Remove tag part to get title
+    state.commandTitle = content.replace(/#[^\s#]+/g, '').trim();
   }
 
   /**
@@ -731,26 +911,46 @@
         </div>
         ${bookmark.folder && bookmark.folder !== 'QuickLink_Data' ? 
           `<span class="linkplus-result-folder">${escapeHtml(bookmark.folder)}</span>` : ''}
+        <button class="linkplus-edit-btn" data-id="${bookmark.id}" title="编辑书签">
+          <svg class="linkplus-icon" viewBox="0 0 1024 1024" fill="currentColor">
+            <path d="M783.673469 929.959184H177.632653c-45.97551 0-83.591837-37.616327-83.591837-83.591837V240.326531c0-45.97551 37.616327-83.591837 83.591837-83.591837h407.510204c11.493878 0 20.897959 9.404082 20.897959 20.897959s-9.404082 20.897959-20.897959 20.897959H177.632653c-22.987755 0-41.795918 18.808163-41.795918 41.795919v606.040816c0 22.987755 18.808163 41.795918 41.795918 41.795918h606.040816c22.987755 0 41.795918-18.808163 41.795919-41.795918V438.857143c0-11.493878 9.404082-20.897959 20.897959-20.897959s20.897959 9.404082 20.897959 20.897959v407.510204c0 45.97551-37.616327 83.591837-83.591837 83.591837z"></path>
+            <path d="M498.938776 563.722449c-9.926531 0-19.330612-4.179592-27.167347-11.493878-11.493878-11.493878-14.628571-28.212245-7.836735-42.840816l31.346939-66.873469c9.926531-21.420408 23.510204-40.75102 39.706122-56.946939l272.718367-272.718367c26.644898-26.644898 72.097959-25.6 100.310205 3.134693 28.734694 28.734694 29.779592 73.665306 3.134693 100.310205l-272.718367 272.718367c-16.718367 16.718367-35.526531 29.779592-56.946939 39.706122l-66.873469 31.346939c-5.22449 2.612245-10.44898 3.657143-15.673469 3.657143zM854.726531 135.836735c-6.791837 0-13.061224 2.612245-17.763266 7.314285L564.244898 415.346939c-13.061224 13.061224-23.510204 28.212245-31.346939 44.930612l-27.167347 57.469388 57.469388-27.167347c16.718367-7.836735 31.869388-18.285714 44.930612-31.346939l272.718368-272.718367c4.702041-4.702041 7.314286-11.493878 6.791836-19.330613-0.522449-8.359184-4.179592-16.195918-9.92653-21.942857-6.269388-6.269388-14.106122-9.926531-21.942857-9.92653-0.522449 0.522449-0.522449 0.522449-1.044898 0.522449z"></path>
+            <path d="M621.714286 497.371429c-5.22449 0-10.44898-2.089796-14.628572-6.269388L532.897959 417.436735c-8.359184-8.359184-8.359184-21.420408 0-29.779592 8.359184-8.359184 21.420408-8.359184 29.779592 0l73.665306 73.665306c8.359184 8.359184 8.359184 21.420408 0 29.779592-4.179592 4.179592-9.404082 6.269388-14.628571 6.269388z"></path>
+          </svg>
+        </button>
         <button class="linkplus-delete-btn" data-id="${bookmark.id}" title="删除书签">
-                  <svg class="linkplus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                  </svg>
-                </button>
+          <svg class="linkplus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+        </button>
       </div>
     `).join('');
 
     // 绑定点击事件 / Bind click events
     resultsContainer.querySelectorAll('.linkplus-result-item').forEach(item => {
       item.addEventListener('click', (e) => {
-        // 如果点击的是删除按钮，不打开书签 / Don't open if delete button clicked
-        if (e.target.classList.contains('linkplus-delete-btn')) {
+        // 如果点击的是编辑或删除按钮，不打开书签 / Don't open if edit or delete button clicked
+        if (e.target.classList.contains('linkplus-edit-btn') || 
+            e.target.classList.contains('linkplus-delete-btn')) {
           return;
         }
         const url = item.dataset.url;
         openBookmark(url, false);
+      });
+    });
+    
+    // 绑定编辑按钮事件 / Bind edit button events
+    resultsContainer.querySelectorAll('.linkplus-edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const bookmarkId = btn.dataset.id;
+        const bookmark = bookmarks.find(b => b.id === bookmarkId);
+        if (bookmark) {
+          handleEditBookmark(bookmarkId, bookmark.title);
+        }
       });
     });
     
@@ -795,11 +995,14 @@
     const hint = shadowRoot.getElementById('linkplus-command-hint');
     if (state.isCommandMode) {
       hint.classList.add('active');
-      if (state.commandTag) {
-        hint.textContent = `将保存到 "${state.commandTag}" 文件夹`;
-      } else {
-        hint.textContent = '按 Enter 保存当前页面，使用 #标签 自动归类';
+      let hintText = '';
+      if (state.commandTitle) {
+        hintText += `标题: "${state.commandTitle}" `;
       }
+      if (state.commandTag) {
+        hintText += `→ 文件夹: "${state.commandTag}"`;
+      }
+      hint.textContent = hintText || '按 Enter 保存当前页面，输入标题 #标签 自定义';
     } else {
       hint.classList.remove('active');
     }
@@ -915,16 +1118,9 @@
    */
   async function executeCommand() {
     const input = shadowRoot.getElementById('linkplus-input');
-    const query = input.value.trim();
-    
-    // 解析标题 / Parse title
-    const content = query.substring(1).trim();
-    
-    // 移除标签部分 / Remove tag part
-    const cleanContent = content.replace(/#[^\s]+$/, '').trim();
     
     // 使用 document 获取当前页面信息 / Get current page info from document
-    let title = cleanContent || document.title;
+    let title = state.commandTitle || document.title;
     let url = window.location.href;
     
     try {
@@ -964,45 +1160,127 @@
    * Handle open tutorial
    */
   function handleOpenTutorial() {
-    const tutorialContent = `
-【Link+ 使用教程】
-
-📌 快捷键
-  • Alt + Q：打开/关闭搜索框
-  • Alt + W：快速保存当前页面
-
-📌 搜索书签
-  1. 按 Alt + Q 打开搜索框
-  2. 输入关键词搜索已保存的书签
-  3. 使用 ↑↓ 键选择，Enter 打开
-  4. Ctrl/Cmd + Enter 在新标签页打开
-
-📌 保存书签
-  方法1：快速保存
-    • 按 Alt + W 直接保存到"未分类"
-  
-  方法2：命令模式保存
-    • 按 Alt + Q 打开搜索框
-    • 输入 + 标题 #标签（如：+ 常用文档 #工作）
-    • 按 Enter 保存
-    • 使用 #标签 可自动归类到子文件夹
-
-📌 管理书签
-  • 鼠标悬停书签项，点击 🗑️ 删除
-  • 点击底部"清空"按钮删除所有书签
-  • 点击"设置"按钮修改快捷键
-
-📌 右键菜单
-  • 在任意网页右键，选择"✨ 一键存入 QuickLink"
-  • 可选择保存到"未分类"、"工作"、"学习"或"稍后阅读"
-
-💡 提示
-  • 相同 URL 只能保存一次
-  • 所有书签保存在浏览器的"QuickLink_Data"文件夹中
-  • 按 ESC 键可关闭搜索框
+    // 创建教程弹窗 / Create tutorial modal
+    const modal = document.createElement('div');
+    modal.className = 'linkplus-tutorial-modal';
+    modal.innerHTML = `
+      <div class="linkplus-tutorial-overlay">
+        <div class="linkplus-tutorial-content">
+          <div class="linkplus-tutorial-header">
+            <h2>📚 Link+ 使用教程</h2>
+            <button class="linkplus-tutorial-close">✕</button>
+          </div>
+          <div class="linkplus-tutorial-body">
+            <section>
+              <h3>⌨️ 快捷键</h3>
+              <ul>
+                <li><kbd>Alt + Q</kbd> 打开/关闭搜索框</li>
+                <li><kbd>Alt + W</kbd> 快速保存当前页面</li>
+              </ul>
+            </section>
+            
+            <section>
+              <h3>🔍 搜索书签</h3>
+              <ol>
+                <li>按 <kbd>Alt + Q</kbd> 打开搜索框</li>
+                <li>输入关键词搜索已保存的书签</li>
+                <li>使用 <kbd>↑↓</kbd> 键选择，<kbd>Enter</kbd> 打开</li>
+                <li><kbd>Ctrl/Cmd + Enter</kbd> 在新标签页打开</li>
+              </ol>
+            </section>
+            
+            <section>
+              <h3>💾 保存书签</h3>
+              <div class="linkplus-tutorial-method">
+                <h4>方法1：快速保存</h4>
+                <p>按 <kbd>Alt + W</kbd> 直接保存到"未分类"</p>
+              </div>
+              
+              <div class="linkplus-tutorial-method">
+                <h4>方法2：命令模式保存（支持自定义名称和标签）</h4>
+                <ol>
+                  <li>按 <kbd>Alt + Q</kbd> 打开搜索框</li>
+                  <li>输入格式：<code>+ 自定义标题 #标签</code></li>
+                  <li>按 <kbd>Enter</kbd> 保存</li>
+                </ol>
+                
+                <div class="linkplus-tutorial-examples">
+                  <p><strong>示例：</strong></p>
+                  <ul>
+                    <li><code>+ 我的常用文档 #工作</code> → 保存为"我的常用文档"，归类到"工作"文件夹</li>
+                    <li><code>+ Vue3 教程 #学习</code> → 保存为"Vue3 教程"，归类到"学习"文件夹</li>
+                    <li><code>+ 待阅读文章</code> → 保存为"待阅读文章"，归类到"未分类"</li>
+                    <li><code>+</code> → 使用网页默认标题，保存到"未分类"</li>
+                  </ul>
+                </div>
+                
+                <div class="linkplus-tutorial-tips">
+                  <p><strong>说明：</strong></p>
+                  <ul>
+                    <li>自定义标题会替代网页原标题</li>
+                    <li><code>#标签</code> 可放在任意位置</li>
+                    <li>支持多个标签（取第一个）</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+            
+            <section>
+              <h3>🛠️ 管理书签</h3>
+              <ul>
+                <li>鼠标悬停书签项，点击 ✏️ 编辑名称</li>
+                <li>鼠标悬停书签项，点击 🗑️ 删除</li>
+                <li>点击底部"清空"按钮删除所有书签</li>
+                <li>点击"设置"按钮修改快捷键</li>
+              </ul>
+            </section>
+            
+            <section>
+              <h3>🖱️ 右键菜单</h3>
+              <ul>
+                <li>在任意网页右键，选择"✨ 一键存入 QuickLink"</li>
+                <li>可选择保存到"未分类"、"工作"、"学习"或"稍后阅读"</li>
+              </ul>
+            </section>
+            
+            <section>
+              <h3>💡 提示</h3>
+              <ul>
+                <li>相同 URL 只能保存一次</li>
+                <li>所有书签保存在浏览器的"QuickLink_Data"文件夹中</li>
+                <li>按 <kbd>ESC</kbd> 键可关闭搜索框</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </div>
     `;
     
-    alert(tutorialContent);
+    shadowRoot.appendChild(modal);
+    
+    // 绑定关闭事件 / Bind close event
+    const closeBtn = modal.querySelector('.linkplus-tutorial-close');
+    const overlay = modal.querySelector('.linkplus-tutorial-overlay');
+    
+    const closeModal = () => {
+      modal.remove();
+    };
+    
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        closeModal();
+      }
+    });
+    
+    // ESC 键关闭 / Close on ESC
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        closeModal();
+        document.removeEventListener('keydown', handleEsc);
+      }
+    };
+    document.addEventListener('keydown', handleEsc);
   }
 
   // ============================================
@@ -1021,6 +1299,51 @@
     } catch (error) {
       console.error('[Link+] Failed to open settings:', error);
       showToast('无法打开设置页面', 'error');
+    }
+  }
+
+  // ============================================
+  // 编辑书签 / Edit Bookmark
+  // ============================================
+
+  /**
+   * 处理编辑书签
+   * Handle edit bookmark
+   * @param {string} bookmarkId - 书签 ID / Bookmark ID
+   * @param {string} currentTitle - 当前标题 / Current title
+   */
+  async function handleEditBookmark(bookmarkId, currentTitle) {
+    // 弹出输入框让用户输入新名称 / Prompt user for new name
+    const newTitle = prompt('请输入新的书签名称：', currentTitle);
+    
+    // 用户取消或没有输入 / User cancelled or empty input
+    if (!newTitle || newTitle.trim() === '') {
+      return;
+    }
+    
+    // 名称没有变化 / Title not changed
+    if (newTitle.trim() === currentTitle) {
+      return;
+    }
+    
+    try {
+      const response = await chrome.runtime.sendMessage({
+        action: 'update-bookmark',
+        bookmarkId: bookmarkId,
+        title: newTitle.trim()
+      });
+      
+      if (response.success) {
+        showToast('书签已更新', 'success');
+        // 刷新书签列表 / Refresh bookmarks list
+        await loadBookmarks();
+        performSearch(state.searchQuery);
+      } else {
+        showToast('更新失败：' + response.error, 'error');
+      }
+    } catch (error) {
+      console.error('[Link+] Failed to update bookmark:', error);
+      showToast('更新失败，请重试', 'error');
     }
   }
 
@@ -1127,6 +1450,7 @@
     state.selectedIndex = 0;
     state.isCommandMode = false;
     state.commandTag = null;
+    state.commandTitle = null;
     
     overlay.classList.add('active');
     input.value = '';
