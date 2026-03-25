@@ -1,9 +1,4 @@
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/3b93f4c6-4da4-4eab-83f0-4cbeb5ef7731" width="400" height="400" alt="Gemini Logo">
-</p>
-<img width="3584" height="1184" alt="Gemini_Generated_Image_22cutz22cutz22cu" src="https://github.com/user-attachments/assets/ece13e44-d6df-4672-a2bf-f434eccf8281" />
-
-
+<img width="3584" height="1184" alt="Gemini_Generated_Image_ukm05fukm05fukm0" src="https://github.com/user-attachments/assets/29bb6a38-fc3e-43c5-ab1b-3842c5cf0466" />
 
 # Link+ - 极简高效的浏览器书签管理工具
 
