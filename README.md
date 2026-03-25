@@ -1,4 +1,6 @@
-<img width="128" height="128" alt="Gemini_Generated_Image_wtfk51wtfk51wtfk" src="https://github.com/user-attachments/assets/3b93f4c6-4da4-4eab-83f0-4cbeb5ef7731" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/3b93f4c6-4da4-4eab-83f0-4cbeb5ef7731" width="400" height="400" alt="Gemini Logo">
+</p>
 
 
 # Link+ - 极简高效的浏览器书签管理工具
