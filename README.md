@@ -123,17 +123,15 @@ Link+/
 
 如有问题或建议，欢迎联系作者：
 
-- 📧 邮箱：your-email@example.com
-- 💬 微信：your-wechat-id
-- 🐙 GitHub：[your-github-username](https://github.com/your-github-username)
+- 💬 微信：lihonglei
 
 ## ☕ 支持项目
 
 如果这个项目对你有帮助，可以请作者喝杯咖啡：
 
-| 微信赞赏 | 支付宝 |
-|---------|--------|
-| ![微信赞赏码](images/wechat-reward.png) | ![支付宝收款码](images/alipay-reward.png) |
+| 微信赞赏  |
+|---------|
+![f4728f4ae297b7793e8068c52d9fba70](https://github.com/user-attachments/assets/615c513f-3a49-4a96-b23e-6eea55e485bd)
 
 > 您的支持是我持续开发的动力！❤️
 
