@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "name": "Link+",
+  "version": "1.0.0",
+  "description": "极简、高效的网页书签管理工具，采用类似 Raycast 的交互逻辑",
+  "author": "Link+ Team",
+  
+  "permissions": [
+    "bookmarks",
+    "tabs",
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "scripting"
+  ],
+  
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/fuse.js", "content/inject.js"],
+      "css": ["content/style.css"],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  
+  "commands": {
+    "toggle-search": {
+      "suggested_key": {
+        "default": "Alt+Q",
+        "mac": "Command+Shift+P"
+      },
+      "description": "打开/关闭全局命令面板"
+    },
+    "quick-save": {
+      "suggested_key": {
+        "default": "Alt+W",
+        "mac": "Command+Shift+S"
+      },
+      "description": "静默快速保存当前页面"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  
+  "action": {
+    "default_popup": "",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    },
+    "default_title": "Link+ - 点击打开命令面板"
+  }
+}
