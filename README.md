@@ -7,7 +7,8 @@
 
 Link+ 是一个基于 Chrome Extension Manifest V3 开发的浏览器插件，采用类似 Raycast 的交互逻辑，提供极简、高效的网页书签管理体验。
 
-<img width="870" height="479" alt="image" src="https://github.com/user-attachments/assets/45bec1a3-72a0-4204-beb7-32b97aa0ecdc" />
+<img width="1715" height="986" alt="image" src="https://github.com/user-attachments/assets/cc578e70-fab6-499b-987e-80946901ceb6" />
+
 
 
 ## ✨ 核心特性
