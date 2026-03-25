@@ -7,9 +7,14 @@
 
 LinkPlus.getStyles = function() {
   return `
-    :host { all: initial; }
+    :host {
+      all: initial;
+      display: block;
+      contain: strict;
+    }
 
-    * {
+    #linkplus-container,
+    #linkplus-container * {
       margin: 0; padding: 0; box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
