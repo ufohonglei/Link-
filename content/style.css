@@ -228,6 +228,8 @@
 .linkplus-result-icon {
   width: 32px;
   height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.1);
   display: flex;
@@ -235,7 +237,22 @@
   justify-content: center;
   margin-right: 12px;
   flex-shrink: 0;
-  font-size: 14px;
+  font-size: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.linkplus-favicon {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  object-fit: contain !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+  image-rendering: -webkit-optimize-contrast;
 }
 
 .linkplus-result-content {

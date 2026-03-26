@@ -11,7 +11,8 @@
     "storage",
     "contextMenus",
     "activeTab",
-    "scripting"
+    "scripting",
+    "favicons"
   ],
   
   "host_permissions": [

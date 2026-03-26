@@ -209,6 +209,8 @@ LinkPlus.getStyles = function() {
     .linkplus-result-icon {
       width: 32px;
       height: 32px;
+      min-width: 32px;
+      min-height: 32px;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.1);
       display: flex;
@@ -217,6 +219,19 @@ LinkPlus.getStyles = function() {
       margin-right: 12px;
       flex-shrink: 0;
       font-size: 14px;
+      overflow: hidden;
+    }
+
+    .linkplus-favicon {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      object-fit: contain !important;
+      display: block !important;
+      flex-shrink: 0 !important;
     }
 
     .linkplus-result-content {

@@ -178,10 +178,39 @@ LinkPlus.renderResults = function(bookmarks) {
 
   const escHtml = LinkPlus.escapeHtml;
 
-  container.innerHTML = bookmarks.map((bm, i) => `
+  // 获取 favicon URL 的辅助函数 - 尝试多种方式获取图标
+  const getFaviconUrl = (url) => {
+    try {
+      const urlObj = new URL(url);
+      // 使用网站的 /favicon.ico
+      return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
+    } catch {
+      return '';
+    }
+  };
+
+  // 处理 favicon 加载错误的函数
+  const handleFaviconError = (img, url) => {
+    try {
+      const domain = new URL(url).hostname;
+      // 如果直接访问 favicon.ico 失败，尝试使用 Google 服务
+      img.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=32`;
+      // 移除 onerror 防止无限循环
+      img.onerror = null;
+    } catch {
+      img.style.display = 'none';
+      img.parentElement.textContent = '🔖';
+    }
+  };
+
+  container.innerHTML = bookmarks.map((bm, i) => {
+    const faviconUrl = getFaviconUrl(bm.url);
+    return `
     <div class="linkplus-result-item ${i === state.selectedIndex ? 'selected' : ''}"
          data-index="${i}" data-url="${bm.url}" data-id="${bm.id}">
-      <div class="linkplus-result-icon">🔖</div>
+      <div class="linkplus-result-icon">
+        ${faviconUrl ? `<img src="${faviconUrl}" alt="" class="linkplus-favicon" data-url="${bm.url}">` : '🔖'}
+      </div>
       <div class="linkplus-result-content">
         <div class="linkplus-result-title">${escHtml(bm.title)}</div>
         <div class="linkplus-result-url">${escHtml(bm.url)}</div>
@@ -195,7 +224,7 @@ LinkPlus.renderResults = function(bookmarks) {
         <svg class="linkplus-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS.trash}</svg>
       </button>
     </div>
-  `).join('');
+  `}).join('');
 
   // 绑定事件
   container.querySelectorAll('.linkplus-result-item').forEach(item => {
@@ -217,6 +246,11 @@ LinkPlus.renderResults = function(bookmarks) {
       const bm = bookmarks.find(b => b.id === btn.dataset.id);
       if (bm) handleDeleteBookmark(bm.id, bm.title);
     });
+  });
+
+  // 绑定 favicon 错误处理
+  container.querySelectorAll('.linkplus-favicon').forEach(img => {
+    img.addEventListener('error', () => handleFaviconError(img, img.dataset.url));
   });
 };
 
