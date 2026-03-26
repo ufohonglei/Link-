@@ -161,7 +161,8 @@ LinkPlus.handleKeyDown = function(e) {
       if (LinkPlus.state.isCommandMode) {
         LinkPlus.executeCommand();
       } else {
-        LinkPlus.selectBookmark(e.metaKey || e.ctrlKey);
+        // 修改默认行为：直接按回车也在新标签页打开
+        LinkPlus.selectBookmark(true); 
       }
       break;
   }

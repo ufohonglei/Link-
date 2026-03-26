@@ -56,13 +56,12 @@
     if (document.getElementById('linkplus-host')) {
       LP.shadowHost = document.getElementById('linkplus-host');
       LP.shadowRoot = LP.shadowHost.shadowRoot;
-      // 确保 host 尺寸正确
-      LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none;';
       return;
     }
     LP.shadowHost = document.createElement('div');
     LP.shadowHost.id = 'linkplus-host';
-    LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;pointer-events:none;';
+    // shadowHost 需要 fixed 定位来创建层叠上下文，但子元素使用 fixed 定位时会相对于视口
+    LP.shadowHost.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:2147483647;';
     LP.shadowRoot = LP.shadowHost.attachShadow({ mode: 'open' });
 
     const style = document.createElement('style');
@@ -162,6 +161,22 @@
       case 'show-toast':
         LP.showToast(request.message, request.type || 'success');
         sendResponse({ success: true });
+        break;
+      case 'get-state':
+        sendResponse({ 
+          success: true, 
+          isSearchOpen: LP.state.isSearchOpen, 
+          activeCategory: LP.state.activeCategory 
+        });
+        break;
+      case 'refresh-bookmarks':
+        if (LP.state.isSearchOpen) {
+          LP.loadBookmarks().then(() => {
+             if (typeof LP.performSearch === 'function') {
+               LP.performSearch(LP.state.searchQuery);
+             }
+          });
+        }
         break;
       default:
         sendResponse({ success: false, error: 'Unknown action' });

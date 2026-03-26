@@ -43,7 +43,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
       case 'update-bookmark': {
         try {
-          await chrome.bookmarks.update(request.bookmarkId, { title: request.title });
+          // 1. 更新标题
+          if (request.title) {
+            await chrome.bookmarks.update(request.bookmarkId, { title: request.title });
+          }
+          // 2. 移动到新分类（如果提供了 category）
+          if (request.category !== undefined) {
+            await moveBookmarkToCategory(request.bookmarkId, request.category);
+          }
           clearBookmarksCache();
           sendResponse({ success: true });
         } catch (e) {

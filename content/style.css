@@ -42,9 +42,11 @@
   visibility: hidden;
   transition: opacity 0.2s ease, visibility 0.2s ease;
   z-index: 2147483647;
+  pointer-events: none;
 }
 
 .linkplus-overlay.active {
+  pointer-events: auto;
   opacity: 1;
   visibility: visible;
 }
@@ -502,4 +504,160 @@
 
 .linkplus-toast-message {
   flex: 1;
+}
+
+/* ============================================
+   Edit Bookmark Modal
+   ============================================ */
+
+.linkplus-edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2147483648;
+}
+
+.linkplus-edit-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.linkplus-edit-content {
+  width: 420px;
+  max-width: 90vw;
+  background: rgba(30, 30, 35, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.linkplus-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.linkplus-edit-header h3 {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.linkplus-edit-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.linkplus-edit-close:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.linkplus-edit-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.linkplus-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.linkplus-edit-field label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.linkplus-edit-field input {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.15s ease;
+}
+
+.linkplus-edit-field input:focus {
+  border-color: rgba(99, 102, 241, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.linkplus-edit-field input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.linkplus-edit-hint {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+}
+
+.linkplus-edit-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.linkplus-edit-btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+}
+
+.linkplus-edit-cancel {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.linkplus-edit-cancel:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.linkplus-edit-save {
+  background: rgba(99, 102, 241, 0.9);
+  color: #fff;
+}
+
+.linkplus-edit-save:hover {
+  background: rgba(99, 102, 241, 1);
+}
+
+.linkplus-edit-btn:active {
+  transform: scale(0.96);
 }

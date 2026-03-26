@@ -178,12 +178,10 @@ LinkPlus.renderResults = function(bookmarks) {
 
   const escHtml = LinkPlus.escapeHtml;
 
-  // 获取 favicon URL 的辅助函数 - 尝试多种方式获取图标
+  // 获取 favicon URL 的辅助函数 - 优先使用浏览器本地缓存 (Chromium 系列通用)
   const getFaviconUrl = (url) => {
     try {
-      const urlObj = new URL(url);
-      // 使用网站的 /favicon.ico
-      return `${urlObj.protocol}//${urlObj.hostname}/favicon.ico`;
+      return `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(url)}&size=32`;
     } catch {
       return '';
     }
@@ -193,13 +191,17 @@ LinkPlus.renderResults = function(bookmarks) {
   const handleFaviconError = (img, url) => {
     try {
       const domain = new URL(url).hostname;
-      // 如果直接访问 favicon.ico 失败，尝试使用 Google 服务
-      img.src = `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=32`;
-      // 移除 onerror 防止无限循环
-      img.onerror = null;
-    } catch {
-      img.style.display = 'none';
-      img.parentElement.textContent = '🔖';
+      // 本地找不到时，降级使用 DuckDuckGo 中转 (国内可用性优于 Google)
+      if (!img.dataset.retried) {
+        img.dataset.retried = "true";
+        img.src = `https://icons.duckduckgo.com/ip3/${domain}.ico`;
+      } else {
+        // 最终显示默认文本图标
+        if (img.style) img.style.display = 'none';
+        if (img.parentElement) img.parentElement.textContent = '🔖';
+      }
+    } catch (e) {
+      if (img.style) img.style.display = 'none';
     }
   };
 
@@ -237,7 +239,7 @@ LinkPlus.renderResults = function(bookmarks) {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
       const bm = bookmarks.find(b => b.id === btn.dataset.id);
-      if (bm) handleEditBookmark(bm.id, bm.title);
+      if (bm) handleEditBookmark(bm.id, bm.title, bm.folder);
     });
   });
   container.querySelectorAll('.linkplus-delete-btn').forEach(btn => {
@@ -311,8 +313,8 @@ LinkPlus.handleOpenTutorial = function() {
             <ol>
               <li>按 <kbd>Alt + Q</kbd> 打开搜索框</li>
               <li>输入关键词搜索已保存的书签</li>
-              <li>使用 <kbd>↑↓</kbd> 键选择，<kbd>Enter</kbd> 打开</li>
-              <li><kbd>Ctrl/Cmd + Enter</kbd> 在新标签页打开</li>
+              <li>使用 <kbd>↑↓</kbd> 键选择，<kbd>Enter</kbd> 直接在新标签页打开</li>
+              <li>默认始终在新标签页打开书签，确保工作不被中断</li>
             </ol>
           </section>
           <section>
@@ -350,7 +352,7 @@ LinkPlus.handleOpenTutorial = function() {
           <section>
             <h3>🛠️ 管理书签</h3>
             <ul>
-              <li>鼠标悬停书签项，点击 ✏️ 编辑名称</li>
+              <li>鼠标悬停书签项，点击 ✏️ 编辑名称和分类</li>
               <li>鼠标悬停书签项，点击 🗑️ 删除</li>
               <li>点击底部"清空"按钮删除所有书签</li>
               <li>点击"设置"按钮修改快捷键</li>
@@ -359,7 +361,7 @@ LinkPlus.handleOpenTutorial = function() {
           <section>
             <h3>🖱️ 右键菜单</h3>
             <ul>
-              <li>在任意网页右键，选择"✨ 一键存入 QuickLink"</li>
+              <li>在任意网页右键，选择"✨ 一键存入 Link+"</li>
               <li>可选择保存到"未分类"、"工作"、"学习"或"稍后阅读"</li>
             </ul>
           </section>

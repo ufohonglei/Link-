@@ -42,6 +42,21 @@ async function getOrCreateSubFolder(parentId, name) {
   });
 }
 
+/**
+ * 获取所有分类文件夹名称
+ */
+async function getCategoryFolders() {
+  const root     = await getOrCreateQuickLinkFolder();
+  return new Promise((resolve) => {
+    chrome.bookmarks.getChildren(root.id, (children) => {
+      const folders = children
+        .filter(c => !c.url && c.title !== UNCATEGORIZED_FOLDER)
+        .map(c => c.title);
+      resolve(folders);
+    });
+  });
+}
+
 // ── 书签操作 ──
 async function saveBookmark({ title, url }, tag = null) {
   const root     = await getOrCreateQuickLinkFolder();
@@ -97,6 +112,29 @@ async function deleteBookmarkRecursive(node) {
     } else {
       chrome.bookmarks.remove(node.id, resolve);
     }
+  });
+}
+
+/**
+ * 移动书签到指定分类文件夹
+ * @param {string} bookmarkId - 书签ID
+ * @param {string} newCategory - 新分类名称
+ * @returns {Promise<Object>} 移动后的书签
+ */
+async function moveBookmarkToCategory(bookmarkId, newCategory) {
+  const root = await getOrCreateQuickLinkFolder();
+  const folderName = (newCategory && newCategory.trim()) ? newCategory.trim() : UNCATEGORIZED_FOLDER;
+  const targetFolder = await getOrCreateSubFolder(root.id, folderName);
+
+  return new Promise((resolve, reject) => {
+    chrome.bookmarks.move(bookmarkId, { parentId: targetFolder.id }, (result) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+      } else {
+        clearBookmarksCache();
+        resolve(result);
+      }
+    });
   });
 }
 
